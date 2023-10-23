@@ -12,7 +12,6 @@ If proceeding, it can be helpful to consult the guideance around potential issue
 [https://developer.hashicorp.com/terraform/cli/import](Terraform Import documentation)
 [https://developer.hashicorp.com/terraform/cli/import/importability](Terraform Importability)
 
-
 ## Requirements
 
 * Confirm that there is no way to re-create, replace, or migrate the resources without using the Terraform Import process.
@@ -29,6 +28,7 @@ If proceeding, it can be helpful to consult the guideance around potential issue
 * More robust handling
 * Test on additional platforms, adjust if needed (Linux Bash, MacOS)
 * Isolate the imported resources at first - Seprate state file, workspace maybe, then integrate after tf resoruce file is complete
+* Consider end-to-end fully automated testing, further robustness, could run in pipeline
 
 # Steps
 
@@ -46,12 +46,15 @@ WIP
 
 The resources should be imported into terraform without changes or restarts.
 
-
 # Testing
 
 The test directory contains scripts to support the visiblity of the process
-WIP
-* Set up test scenario with VM, Volume, and Container consuming both
-* Verify that the resources are behaving as expected
-* Verify that they are present in terraform after and no expected changes
 
+1. Ensure you are in the appropriate directory in powershell core
+2. to set up the resources, run `new-dockerSample.ps1`
+3. for a listing of test resources run `get-dockerSample.ps1`, or inspect them using docker commands as desired
+4. Execute the import process as above under 'steps'
+5. Confirm the resources are imported as expected in terraform, and the resource listing hasn't been affected
+
+# Changelog
+* 2023-10-23 3:18 PM - Added base test scripts
