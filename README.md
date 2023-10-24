@@ -36,10 +36,10 @@ https://developer.hashicorp.com/terraform/cli/import/importability
 2. Run `terraform init` and `terraform plan` to ensure the current state is "clean" and there are no pending changes to make. If there are, handle these changes before begining.
 3. Run the script to inspect the target container
 4. Import resources individually, using this process:
-  1. Add at least the minimum resource outline for the resource to the terrform file
-  2. Run the import command provided by the script for that specific resource (only!) Note you may need to change the default names, which come from the Docker resource names.
-  3. Handle any errors
-  4. Add additional fields as desired. The `terraform plan` and `terraform show` commands make the state and differences more visible
+    1. Add at least the minimum resource outline for the resource to the terrform file
+    2. Run the import command provided by the script for that specific resource (only!) Note you may need to change the default names, which come from the Docker resource names.
+    3. Handle any errors
+    4. Add additional fields as desired. The `terraform plan` and `terraform show` commands make the state and differences more visible
 5. After each resource is added your plan should be running, but may continue to have differences, and may still plan to restart the container. Refer to the "show" contents, and reconcile desired fields, particularly any marked as requiring restart
 6. If there are any changes you wish to apply (minor differences may be acceptable in some cases) verify the plan impacts will be as expected, especially around re-creating or restarting any resources, and run the `terrform apply`
 7. Verify the `terraform plan` now shows `no changes`
