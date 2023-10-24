@@ -2,7 +2,6 @@
 
 This repo has tools and support for addopting existing resources present in Docker into Terraform. This process will have manual steps for safety given the sensitive and complex nature of the import and state management processes in terraform.
 
-
 ## Warning - LAST RESORT ONLY
 
 This process is not recommended unless absolutely needed. Letting Terraform manage and create the desired resources natively is much safer. Data, files, and other continous persistance needs can potentially be handled by migrating them into managed resources, redirecting requests and similar processes. These should be explored before attempting this process.
@@ -17,44 +16,48 @@ If proceeding, it can be helpful to consult the guideance around potential issue
 * Confirm that there is no way to re-create, replace, or migrate the resources without using the Terraform Import process.
 * Access to the docker instances required, usually on the machine in question
 * Environment
-    * Powershell core
-    * Terraform
-    * Docker
+  * Powershell core
+  * Terraform
+  * Docker
 * Tested on Windows
-* Permission or access to run Terraform, particularly exclusive access if shared state is used.
+* Permission to run Terraform, particularly shared state if needed
 
-# Future work
-* Fully parameterize the types and names of resources to addopt
-* More robust handling
-* Test on additional platforms, adjust if needed (Linux Bash, MacOS)
-* Isolate the imported resources at first - Seprate state file, workspace maybe, then integrate after tf resoruce file is complete
+## Future work
+
+* Test on additional platforms, adjust if needed (Linux+Bash, MacOS)
+* Fully parameterize the types and names of resources to adopt
+* handle 0 or multiple volume and mount cases
+* better handle locating terraform directory vs script location
 * Consider end-to-end fully automated testing, further robustness, could run in pipeline
 
-# Steps
+## Steps
 
-WIP
+1. Ensure you are in the appropriate terraform directory, and have access to the script.
+2. Run `terraform init` and `terraform plan` to ensure the current state is "clean" and there are no pending changes to make. If there are, handle these changes before begining.
+3. Run the script to inspect the target container
+4. Import resources individually, using this process:
+  1. Add at least the minimum resource outline for the resource to the terrform file
+  2. Run the import command provided by the script for that specific resource (only!) Note you may need to change the default names, which come from the Docker resource names.
+  3. Handle any errors
+  4. Add additional fields as desired. The `terraform plan` and `terraform show` commands make the state and differences more visible
+5. After each resource is added your plan should be running, but may continue to have differences, and may still plan to restart the container. Refer to the "show" contents, and reconcile desired fields, particularly any marked as requiring restart
+6. If there are any changes you wish to apply (minor differences may be acceptable in some cases) verify the plan impacts will be as expected, especially around re-creating or restarting any resources, and run the `terrform apply`
+7. Verify the `terraform plan` now shows `no changes`
 
-1. Run `terraform plan` to ensure the current state is "clean" and there are no pending changes to make. If there are, handle these changes before beginning.
-2. Run the script to enumerate resources (auto?), and show import commands
-3. Import resources individually, using this process:
-  1. Run the import command provided by the script for that specific resource (only!)
-  2. Run `terraform plan` to confirm the resource was added, and what fields it is expecting
-  3. Add the resource, and expected fields and info to your terraform file (TODO: Consider exporting as an approach?)
-3. Put imported docker resources into terraform file, in the terraform definition
-4. Confirm that the `terraform plan` runs with no expected changes, and all resources are present
-5. Check the terraform changes into source control, ensure the state is tracked as expected, either local or shared
+The resources should now be controlled by terraform.
 
-The resources should be imported into terraform without changes or restarts.
-
-# Testing
+## Testing
 
 The test directory contains scripts to support the visiblity of the process
 
-1. Ensure you are in the appropriate directory in powershell core
+1. Ensure you are in the test directory
 2. to set up the resources, run `new-dockerSample.ps1`
 3. for a listing of test resources run `get-dockerSample.ps1`, or inspect them using docker commands as desired
-4. Execute the import process as above under 'steps'
-5. Confirm the resources are imported as expected in terraform, and the resource listing hasn't been affected
+4. Execute the import process as above under 'steps' from the test directory `../Get-DockerTerraformImportCommands.ps1 -DockerContainerName 'testservice'`
+5. Follow along with the process, using the commented out fields from `main.tf`.
+6. check the resource listing again, and verify nothing has changed. Check the container age to ensure it did not restart.
 
-# Changelog
+## Changelog
+
 * 2023-10-23 3:18 PM - Added base test scripts
+* 2023-10-23 6:05 PM - Added test infrastructure and core script

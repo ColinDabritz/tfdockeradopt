@@ -6,9 +6,9 @@
 
 Write-Output "Creating example docker container, network, volume for testing..."
 
-docker volume create --name testservicevol
+docker volume create --name testservicevolume
 docker network create -d bridge --subnet 192.0.0.2/24 testservicenetwork
-docker run --name testservice -p "8080:80" --network testservicenetwork --mount source=testservicevol,target=/testdata -d nginx:latest
+docker run --name testservice -p "8080:80" --network testservicenetwork --mount source=testservicevolume,target=/testdata -d nginx:latest
 
 #create test file in the volume mount via container
 Write-Output "createing 'testfile' under volume mount at /testdata/testfile..."
