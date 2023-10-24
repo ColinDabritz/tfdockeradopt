@@ -8,8 +8,8 @@ This process is not recommended unless absolutely needed. Letting Terraform mana
 
 If proceeding, it can be helpful to consult the guideance around potential issues with Import, and state management.
 
-[https://developer.hashicorp.com/terraform/cli/import](Terraform Import documentation)
-[https://developer.hashicorp.com/terraform/cli/import/importability](Terraform Importability)
+https://developer.hashicorp.com/terraform/cli/import
+https://developer.hashicorp.com/terraform/cli/import/importability
 
 ## Requirements
 
